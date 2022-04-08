@@ -1,0 +1,215 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the truncateb package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: truncateb v0.1\n"
+"Report-Msgid-Bugs-To: akemi_homura@kurisa.ch\n"
+"POT-Creation-Date: 2022-03-21 23:54+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: truncateb.c:74
+#, c-format
+msgid "Try '%s --help' for more information.\n"
+msgstr ""
+
+#: truncateb.c:78
+#, c-format
+msgid "Usage: %s OPTION... FILE...\n"
+msgstr ""
+
+#: truncateb.c:79
+msgid ""
+"Shrink or extend the size of each FILE to the specified size\n"
+"\n"
+msgstr ""
+
+#: truncateb.c:80
+msgid ""
+"A FILE argument that does not exist is created.\n"
+"\n"
+msgstr ""
+
+#: truncateb.c:81
+msgid ""
+"If a FILE is larger than the specified size, the extra data is lost.\n"
+"If a FILE is shorter, it is extended and the sparse extended part (hole)\n"
+"reads as zero bytes.\n"
+"\n"
+msgstr ""
+
+#: truncateb.c:82
+msgid "  -c, --no-create        do not create any files\n"
+msgstr ""
+
+#: truncateb.c:83
+msgid ""
+"  -o, --io-blocks        treat SIZE as number of IO blocks instead of bytes\n"
+msgstr ""
+
+#: truncateb.c:84
+msgid "  -r, --reference=RFILE  base size on RFILE\n"
+msgstr ""
+
+#: truncateb.c:85
+msgid "  -s, --size=SIZE        set or adjust the file size by SIZE bytes\n"
+msgstr ""
+
+#: truncateb.c:86
+msgid ""
+"  -C, --character=CODE   pad file with character of code CODE (no effect if "
+"new size is less than of equal to initial size)\n"
+msgstr ""
+
+#: truncateb.c:87
+msgid "  -h, --help             display this help and exit\n"
+msgstr ""
+
+#: truncateb.c:88
+msgid "  -v, --version          output version information and exit\n"
+msgstr ""
+
+#: truncateb.c:89
+msgid ""
+"\n"
+"The SIZE argument is an integer and optional unit (example: 10K is "
+"10*1024).\n"
+"Units are K,M,G,T,P,E,Z,Y (powers of 1024) or KB,MB,... (powers of 1000).\n"
+"Binary prefixes can be used, too: KiB=K, MiB=M, and so on.\n"
+msgstr ""
+
+#: truncateb.c:90
+msgid ""
+"\n"
+"SIZE may also be prefixed by one of the following modifying characters:\n"
+"'+' extend by, '-' reduce by, '<' at most, '>' at least,\n"
+"'/' round down to multiple of, '%' round up to multiple of.\n"
+msgstr ""
+
+#: truncateb.c:91
+msgid ""
+"\n"
+"CODE may be a decimal number 0 to 255, hexadecimal 0x0 till 0xff, or octal "
+"00 till 0400.\n"
+msgstr ""
+
+#: truncateb.c:111
+#, c-format
+msgid "cannot fstat \"%s\""
+msgstr ""
+
+#: truncateb.c:121
+#, c-format
+msgid "overflow in %<PRIdMAX> * %<PRIdPTR> byte blocks for file \"%s\""
+msgstr ""
+
+#: truncateb.c:141
+#, c-format
+msgid "\"%s\" has unusable, apparently negative size"
+msgstr ""
+
+#: truncateb.c:150 truncateb.c:632
+#, c-format
+msgid "cannot get the size of \"%s\""
+msgstr ""
+
+#: truncateb.c:179
+#, c-format
+msgid "overflow extending size of file \"%s\""
+msgstr ""
+
+#: truncateb.c:197
+#, c-format
+msgid "failed to truncate \"%s\" at %<PRIdMAX> bytes"
+msgstr ""
+
+#: truncateb.c:211
+#, c-format
+msgid "failed to seek \"%s\""
+msgstr ""
+
+#: truncateb.c:216
+#, c-format
+msgid "wrong seek position got for \"%s\""
+msgstr ""
+
+#: truncateb.c:224
+msgid "failed to allocate block to fill"
+msgstr ""
+
+#: truncateb.c:235
+#, c-format
+msgid "failure during writing \"%s\""
+msgstr ""
+
+#: truncateb.c:241
+#, c-format
+msgid "can't write block to \"%s\""
+msgstr ""
+
+#: truncateb.c:431
+msgid "Invalid number"
+msgstr ""
+
+#: truncateb.c:485
+#, c-format
+msgid "wrong character code argument %s"
+msgstr ""
+
+#: truncateb.c:490
+#, c-format
+msgid "wrong character code value %d (should be 0..255)"
+msgstr ""
+
+#: truncateb.c:535
+msgid "multiple relative modifiers specified"
+msgstr ""
+
+#: truncateb.c:548
+msgid "division by zero"
+msgstr ""
+
+#: truncateb.c:559
+#, c-format
+msgid "%s version %s\n"
+msgstr ""
+
+#: truncateb.c:574
+msgid "you must specify either --size or --reference"
+msgstr ""
+
+#: truncateb.c:581
+msgid "you must specify a relative --size with --reference"
+msgstr ""
+
+#: truncateb.c:588
+msgid "--io-blocks was specified but --size was not"
+msgstr ""
+
+#: truncateb.c:595
+msgid "missing file operand"
+msgstr ""
+
+#: truncateb.c:605
+#, c-format
+msgid "cannot stat \"%s\""
+msgstr ""
+
+#: truncateb.c:658
+#, c-format
+msgid "cannot open \"%s\" for writing"
+msgstr ""
+
+#: truncateb.c:667
+#, c-format
+msgid "failed to close \"%s\""
+msgstr ""
