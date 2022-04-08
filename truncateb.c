@@ -442,9 +442,9 @@ int main (int argc, char **argv)
     enum rel_mode rel_mode = rm_abs;
     int c;
     char *endp;
-    int no_create;
-    int block_mode;
-    char const *ref_file;
+    int no_create = 0;
+    int block_mode = 0;
+    char const *ref_file = NULL;
     int char_code = -1;
     static struct option const longopts[] =
     {
