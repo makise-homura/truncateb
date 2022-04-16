@@ -106,10 +106,32 @@ static int do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize, en
     int ret = 1;
     off_t fsize;
 
-    if ((block_mode || (rel_mode && rsize < 0)) && fstat (fd, &sb) != 0)
+    if (block_mode || char_code >= 0 || (rel_mode && rsize < 0))
     {
-        error (0, errno, _("cannot fstat \"%s\""), fname);
-        return 0;
+        if(fstat (fd, &sb) != 0)
+        {
+            error (0, errno, _("cannot fstat \"%s\""), fname);
+            return 0;
+        }
+        if (usable_st_size (&sb))
+        {
+            fsize = sb.st_size;
+            if (fsize < 0)
+            {
+                /* Sanity check.  Overflow is the only reason I can think this would ever go negative. */
+                error (0, 0, _("\"%s\" has unusable, apparently negative size"), fname);
+                return 0;
+            }
+        }
+        else
+        {
+            fsize = lseek (fd, 0, SEEK_END);
+            if (fsize < 0)
+            {
+                error (0, errno, _("cannot get the size of \"%s\""), fname);
+                return 0;
+            }
+        }
     }
 
     if (block_mode)
@@ -123,34 +145,11 @@ static int do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize, en
         }
     }
 
-    if (rel_mode || char_code >= 0)
+    if (rel_mode)
     {
-
         if (0 <= rsize)
         {
             fsize = rsize;
-        }
-        else
-        {
-            if (usable_st_size (&sb))
-            {
-                fsize = sb.st_size;
-                if (fsize < 0)
-                {
-                    /* Sanity check.  Overflow is the only reason I can think this would ever go negative. */
-                    error (0, 0, _("\"%s\" has unusable, apparently negative size"), fname);
-                    return 0;
-                }
-            }
-            else
-            {
-                fsize = lseek (fd, 0, SEEK_END);
-                if (fsize < 0)
-                {
-                    error (0, errno, _("cannot get the size of \"%s\""), fname);
-                    return 0;
-                }
-            }
         }
 
         if (rel_mode == rm_min)
@@ -166,7 +165,7 @@ static int do_ftruncate (int fd, char const *fname, off_t ssize, off_t rsize, en
             /* 0..ssize-1 -> 0 */
             nsize = fsize - fsize % ssize;
         }
-        else if (rel_mode)
+        else
         {
             if (rel_mode == rm_rup)
             {
@@ -441,7 +440,7 @@ int main (int argc, char **argv)
     off_t rsize = -1;
     enum rel_mode rel_mode = rm_abs;
     int c;
-    char *endp;
+    char *endp = NULL;
     int no_create = 0;
     int block_mode = 0;
     char const *ref_file = NULL;
@@ -480,7 +479,7 @@ int main (int argc, char **argv)
 
             case 'C':
                 char_code = strtol(optarg,&endp,0);
-                if(!endp || !*endp)
+                if(!endp || *endp)
                 {
                     error (0, errno, _("wrong character code argument %s"), optarg);
                     usage (EXIT_FAILURE);
