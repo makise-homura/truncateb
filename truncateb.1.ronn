@@ -61,10 +61,12 @@ git(1) to determine version, and ronn(1) to generate documentation.
 ```
 git clone https://github.com/makise-homura/truncateb
 cd truncateb
+git submodule update --init
 mkdir build
 cd build
 meson ..
 ninja
+meson test
 sudo ninja install
 ```
 
