@@ -34,13 +34,36 @@ test_wrapper = find_program('tests/test_wrapper.py')
 srcfile = meson.current_source_dir() / 'tests/srcfile'
 reffile = meson.current_source_dir() / 'tests/reffile.'
 
-test('truncate to same size', test_wrapper, args: ['test0', 'a5274d87054ad92cb5ceea1305b63420', truncateb.full_path(), srcfile, '-s 8192'])
-test('truncate to lesser size', test_wrapper, args: ['test1', '9d9781e1b9251d310026056b616ddc6b', truncateb.full_path(), srcfile, '-s 4096'])
-test('truncate to greater size', test_wrapper, args: ['test2', '759000319ee7a3330459cdfe461da40f', truncateb.full_path(), srcfile, '-s 16384'])
-test('truncate to greater size padding zero bytes', test_wrapper, args: ['test3', '759000319ee7a3330459cdfe461da40f', truncateb.full_path(), srcfile, '-s 16384 -C 0'])
-test('truncate to greater size padding 0xFF bytes', test_wrapper, args: ['test4', 'd5810a9eabe5bbe99bd50e6bc45c7770', truncateb.full_path(), srcfile, '-s 16384 -C 0xFF'])
-test('truncate to same size using reference file', test_wrapper, args: ['test5', 'a5274d87054ad92cb5ceea1305b63420', truncateb.full_path(), srcfile, '-r ' + reffile + '8k'])
-test('truncate to lesser size using reference file', test_wrapper, args: ['test6', '9d9781e1b9251d310026056b616ddc6b', truncateb.full_path(), srcfile, '-r ' + reffile + '4k'])
-test('truncate to greater size using reference file', test_wrapper, args: ['test7', '759000319ee7a3330459cdfe461da40f', truncateb.full_path(), srcfile, '-r ' + reffile + '16k'])
-test('truncate to greater size padding zero bytes using reference file', test_wrapper, args: ['test8', '759000319ee7a3330459cdfe461da40f', truncateb.full_path(), srcfile, '-r ' + reffile + '16k -C 0'])
-test('truncate to greater size padding 0xFF bytes using reference file', test_wrapper, args: ['test9', 'd5810a9eabe5bbe99bd50e6bc45c7770', truncateb.full_path(), srcfile, '-r ' + reffile + '16k -C 0xFF'])
+testdata = {
+    'truncate to zero size':     {'args': '-s 0',     'rfargs': '-r ' + reffile + '0k',  'md5': 'd41d8cd98f00b204e9800998ecf8427e'},
+    'truncate to lesser size':   {'args': '-s 4096',  'rfargs': '-r ' + reffile + '4k',  'md5': '9d9781e1b9251d310026056b616ddc6b'},
+    'truncate to same size':     {'args': '-s 8192',  'rfargs': '-r ' + reffile + '8k',  'md5': 'a5274d87054ad92cb5ceea1305b63420'},
+    'truncate to greater size':  {'args': '-s 16384', 'rfargs': '-r ' + reffile + '16k', 'md5': '759000319ee7a3330459cdfe461da40f', 'md5ff': 'd5810a9eabe5bbe99bd50e6bc45c7770'}
+}
+
+foreach testname, data : testdata
+    if 'md5ff' in data
+        md5ff = data['md5ff']
+    else
+        md5ff = data['md5']
+    endif
+
+    if 'args' in data
+        test(testname,                         test_wrapper, args: [testname.underscorify() + '-a', data['md5'], truncateb.full_path(), srcfile, data['args']])
+        test(testname + ' padding zero bytes', test_wrapper, args: [testname.underscorify() + '-z', data['md5'], truncateb.full_path(), srcfile, data['args'] + ' -C 0'])
+        test(testname + ' padding 0xFF bytes', test_wrapper, args: [testname.underscorify() + '-f', md5ff,       truncateb.full_path(), srcfile, data['args'] + ' -C 0xFF'])
+    endif
+    if 'rfargs' in data
+        test(testname + ' using reference file',                    test_wrapper, args: [testname.underscorify() + '-ar', data['md5'], truncateb.full_path(), srcfile, data['rfargs']])
+        test(testname + ' padding zero bytes using reference file', test_wrapper, args: [testname.underscorify() + '-zr', data['md5'], truncateb.full_path(), srcfile, data['rfargs'] + ' -C 0'])
+        test(testname + ' padding 0xFF bytes using reference file', test_wrapper, args: [testname.underscorify() + '-fr', md5ff,       truncateb.full_path(), srcfile, data['rfargs'] + ' -C 0xFF'])
+    endif
+endforeach
+
+# test system TODO:
+#   generate reference files
+#   check -o
+#   check -c on existing file
+#   check -c on not-existing file
+#   check -c on existing file
+#   check '+' extend by, '-' reduce by, '<' at most, '>' at least, '/' round down to multiple of, '%' round up to multiple of.
